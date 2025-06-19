@@ -3,3 +3,14 @@ __pycache__/
 *.pyc
 *.log
 .env
+# Ignore Python virtual environments
+venv/
+
+# Ignore node_modules for React
+frontend/node_modules/
+
+# Ignore runtime or local config
+__pycache__/
+*.pyc
+.env
+.DS_Store
