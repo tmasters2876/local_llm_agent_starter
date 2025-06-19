@@ -1,16 +1,17 @@
+# Python
 venv/
 __pycache__/
 *.pyc
-*.log
-.env
-# Ignore Python virtual environments
-venv/
+*.pyo
+*.pyd
 
-# Ignore node_modules for React
+# FastAPI / local configs
+.env
+
+# Node (React)
 frontend/node_modules/
+frontend/.env
 
-# Ignore runtime or local config
-__pycache__/
-*.pyc
-.env
+# macOS & editor junk
 .DS_Store
+*.log

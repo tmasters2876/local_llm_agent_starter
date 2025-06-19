@@ -4,6 +4,7 @@ function App() {
   const [prompt, setPrompt] = useState("");
   const [temperature, setTemperature] = useState(0.7);
   const [numPredict, setNumPredict] = useState(100);
+  const [model, setModel] = useState("mistral"); // ✅ NEW
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -19,6 +20,7 @@ function App() {
         prompt,
         temperature,
         num_predict: numPredict,
+        model, // ✅ NEW
       }),
     });
 
@@ -31,6 +33,17 @@ function App() {
     <div style={{ padding: "2rem", maxWidth: "600px", margin: "auto" }}>
       <h1>🔮 Local LLM Agent UI</h1>
       <form onSubmit={handleSubmit}>
+        <label>Model:</label>
+        <select
+          value={model}
+          onChange={(e) => setModel(e.target.value)}
+          style={{ width: "100%", marginBottom: "1rem" }}
+        >
+          <option value="mistral">Mistral</option>
+          <option value="llama3">Llama 3</option>
+          {/* Add more here if you pull more models! */}
+        </select>
+
         <label>Prompt:</label>
         <textarea
           value={prompt}
@@ -74,9 +87,19 @@ function App() {
       {result && (
         <>
           <h3>💡 Response:</h3>
-          <pre style={{ background: "#f5f5f5", padding: "1rem" }}>
-            {result}
-          </pre>
+          <div style={{ maxWidth: "100%", overflowX: "auto" }}>
+            <pre
+              style={{
+                background: "#f5f5f5",
+                padding: "1rem",
+                whiteSpace: "pre-wrap",
+                wordWrap: "break-word",
+                borderRadius: "8px",
+              }}
+            >
+              {result}
+            </pre>
+          </div>
         </>
       )}
     </div>
@@ -84,4 +107,3 @@ function App() {
 }
 
 export default App;
-

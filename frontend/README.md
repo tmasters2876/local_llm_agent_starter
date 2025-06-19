@@ -68,3 +68,55 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+# Local LLM Agent Orchestrator 🎓🚀
+
+## 📌 What This Is
+
+A **local, production-grade orchestration stack** for experimenting with open-weight LLMs (like Mistral or Llama 3) entirely on your own machine.
+
+**Key features:**
+✅ Runs any Ollama-compatible model locally (Mistral, Llama 3)  
+✅ FastAPI backend with dynamic settings: prompt, temperature, max tokens, and model selector  
+✅ React frontend for easy interaction with sliders & model dropdown  
+✅ Handles streamed chunk output and stitches it for clean display
+
+---
+
+## ⚙️ Tech Stack
+
+- [Ollama](https://ollama.com) — local LLM runtime
+- FastAPI — Python orchestrator microservice
+- React — modern dynamic frontend
+- REST API — easy to plug into other tools later
+
+---
+
+## 🚀 How to Run
+
+### 1️⃣ Pull and run your models with Ollama
+
+```bash
+ollama pull mistral
+ollama pull llama3
+
+# Optional: run manually, or Ollama auto-starts when API is called
+ollama run mistral
+
+
+# Create and activate venv
+python3 -m venv venv
+source venv/bin/activate
+
+# Install
+pip install -r requirements.txt
+
+# Run FastAPI server
+uvicorn main:app --reload
+
+
+
+cd frontend
+npm install
+npm start
