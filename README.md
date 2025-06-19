@@ -18,3 +18,4 @@ ollama pull mistral
 
 # Run FastAPI
 uvicorn main:app --reload
+end
