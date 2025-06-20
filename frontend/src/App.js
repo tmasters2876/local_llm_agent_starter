@@ -90,7 +90,7 @@ function App() {
           <div
             style={{
               maxWidth: "100%",
-              maxHeight: "400px",
+              maxHeight: "800px",
               overflowY: "auto",
               overflowX: "auto",
               marginTop: "1rem",
