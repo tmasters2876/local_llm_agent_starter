@@ -1,15 +1,15 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request  # ✅ fixed
 from pydantic import BaseModel
-from orchestrator import orchestrate_task
+from orchestrator import run_orchestration
 
-from fastapi.middleware.cors import CORSMiddleware  # ✅ Add this
+from fastapi.middleware.cors import CORSMiddleware  # ✅ already good
 
 app = FastAPI()
 
-# ✅ Add CORS setup
+# ✅ CORS — keep as-is
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # or restrict to ["http://localhost:3000"]
+    allow_origins=["*"],  # tighten later if you wish
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -19,17 +19,13 @@ class PromptRequest(BaseModel):
     prompt: str
     temperature: float = 0.7
     num_predict: int = 100
-    model: str = "mistral"  # ✅ NEW: allow passing model name
+    model: str = "mistral"
 
 @app.post("/api/ask")
-async def ask(request: PromptRequest):
-    output = await orchestrate_task(
-        prompt=request.prompt,
-        temperature=request.temperature,
-        num_predict=request.num_predict,
-        model=request.model
-    )
-    return {"result": output}
+async def ask(request: Request):
+    body = await request.json()
+    result = run_orchestration(body)
+    return {"result": result}
 
 @app.get("/")
 def root():

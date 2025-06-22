@@ -1,22 +1,23 @@
-# langgraph_nodes.py
-
 from langgraph.graph import StateGraph, END
 from pydantic import BaseModel
 
 from ollama_connector import query_ollama
 
-# ✅ 1️⃣ Define the State schema
+# ✅ Extended WorkflowState — source of truth
 class WorkflowState(BaseModel):
     prompt: str
     result: str | None = None
-    route: str | None = None  # For classifier output
+    route: str | None = None
+    temperature: float = 0.7
+    num_predict: int = 100
+    model: str = "mistral"
 
-# ✅ 2️⃣ Intake Node
+# ✅ Intake Node
 def intake_node(state: WorkflowState) -> WorkflowState:
     print(f"[Intake Node] Received: {state.prompt}")
     return state
 
-# ✅ 3️⃣ Classifier Node
+# ✅ Classifier Node
 def classifier_node(state: WorkflowState) -> WorkflowState:
     if "summarize" in state.prompt.lower():
         state.route = "summarizer"
@@ -25,25 +26,35 @@ def classifier_node(state: WorkflowState) -> WorkflowState:
     print(f"[Classifier Node] Routing to: {state.route}")
     return state
 
-# ✅ 4️⃣ Condition Function for conditional edges
+# ✅ Condition function
 def route_condition(state: WorkflowState) -> str:
     return state.route
 
-# ✅ 5️⃣ Summarizer Node
+# ✅ Summarizer Node — now passes all params
 def summarizer_node(state: WorkflowState) -> WorkflowState:
     prompt = f"Please provide a concise summary:\n{state.prompt}"
     print(f"[Summarizer Node] Prompt: {prompt}")
-    state.result = query_ollama(prompt, model="mistral")
+    state.result = query_ollama(
+        prompt,
+        model=state.model,
+        temperature=state.temperature,
+        num_predict=state.num_predict
+    )
     return state
 
-# ✅ 6️⃣ Generator Node
+# ✅ Generator Node — now passes all params
 def generator_node(state: WorkflowState) -> WorkflowState:
     prompt = f"Please expand creatively:\n{state.prompt}"
     print(f"[Generator Node] Prompt: {prompt}")
-    state.result = query_ollama(prompt, model="mistral")
+    state.result = query_ollama(
+        prompt,
+        model=state.model,
+        temperature=state.temperature,
+        num_predict=state.num_predict
+    )
     return state
 
-# ✅ 7️⃣ Build Graph
+# ✅ Build the LangGraph
 def build_graph():
     graph = StateGraph(state_schema=WorkflowState)
 
@@ -54,8 +65,6 @@ def build_graph():
 
     graph.set_entry_point("intake")
     graph.add_edge("intake", "classifier")
-
-    # ✅ Correct for langgraph 0.4+
     graph.add_conditional_edges(
         "classifier",
         route_condition,
@@ -64,7 +73,6 @@ def build_graph():
             "generator": "generator"
         }
     )
-
     graph.add_edge("summarizer", END)
     graph.add_edge("generator", END)
 

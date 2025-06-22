@@ -1,10 +1,12 @@
-from ollama_connector import query_ollama
+from langgraph_nodes import build_graph, WorkflowState
 
-async def orchestrate_task(prompt: str, temperature: float, num_predict: int, model: str) -> str:
-    result = query_ollama(
-        prompt=prompt,
-        temperature=temperature,
-        num_predict=num_predict,
-        model=model  # ✅ pass through
+def run_orchestration(payload):
+    graph = build_graph()
+    state = WorkflowState(
+        prompt=payload["prompt"],
+        temperature=payload.get("temperature", 0.7),
+        num_predict=payload.get("num_predict", 100),
+        model=payload.get("model", "mistral")
     )
-    return result
+    output = graph.invoke(state)
+    return output["result"]  # ✅ Correct and robust
