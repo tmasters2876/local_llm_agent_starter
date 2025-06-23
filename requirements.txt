@@ -33,3 +33,6 @@ urllib3==2.5.0
 uvicorn==0.34.3
 xxhash==3.5.0
 zstandard==0.23.0
+# Add to the bottom:
+pytest==8.2.1
+
