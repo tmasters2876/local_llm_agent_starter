@@ -6,6 +6,10 @@ from fastapi.middleware.cors import CORSMiddleware  # ✅ already good
 
 app = FastAPI()
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 # ✅ CORS — keep as-is
 app.add_middleware(
     CORSMiddleware,
