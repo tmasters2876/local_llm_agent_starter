@@ -1,5 +1,17 @@
+# Python
 venv/
 __pycache__/
 *.pyc
-*.log
+*.pyo
+*.pyd
+
+# FastAPI / local configs
 .env
+
+# Node (React)
+frontend/node_modules/
+frontend/.env
+
+# macOS & editor junk
+.DS_Store
+*.log

@@ -1,7 +1,12 @@
-from ollama_connector import query_ollama
+from langgraph_nodes import build_graph, WorkflowState
 
-# Example orchestration: just echo for now
-async def orchestrate_task(prompt: str) -> str:
-    # Here you could add LangGraph agent steps
-    result = query_ollama(prompt)
-    return result
+def run_orchestration(payload):
+    graph = build_graph()
+    state = WorkflowState(
+        prompt=payload["prompt"],
+        temperature=payload.get("temperature", 0.7),
+        num_predict=payload.get("num_predict", 100),
+        model=payload.get("model", "mistral")
+    )
+    output = graph.invoke(state)
+    return output["result"]  # ✅ Correct and robust

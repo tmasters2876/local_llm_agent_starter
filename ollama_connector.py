@@ -1,22 +1,24 @@
+import os
 import requests
 
-def query_ollama(prompt: str, model: str = "mistral") -> str:
-    response = requests.post(
-        "http://localhost:11434/api/generate",
-        json={
-            "model": model,
-            "prompt": prompt
-        },
-        stream=True
-    )
-    # Ollama streams JSON lines
-    chunks = []
-    for line in response.iter_lines():
-        if line:
-            chunk = line.decode("utf-8")
-            # each line is a JSON object; extract the 'response' field
-            import json
-            chunk_json = json.loads(chunk)
-            if 'response' in chunk_json:
-                chunks.append(chunk_json['response'])
-    return ''.join(chunks)
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
+
+def query_ollama(prompt, model="mistral", temperature=0.7, num_predict=100):
+    try:
+        response = requests.post(
+            f"{OLLAMA_URL}/api/generate",
+            json={
+                "model": model,
+                "prompt": prompt,
+                "temperature": temperature,
+                "num_predict": num_predict,
+                "stream": False  # force one JSON block
+            },
+            timeout=240  # ✅ more room for slow local CPU
+        )
+        response.raise_for_status()
+        result = response.json()["response"]
+        return result
+    except Exception as e:
+        print(f"[query_ollama fallback] Error: {e}")
+        return "Standard fallback: Unable to process your request at the moment."
