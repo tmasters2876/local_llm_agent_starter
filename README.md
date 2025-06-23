@@ -51,3 +51,10 @@ npm start
 In VS Code sidebar or terminal:
 ```bash
 git status
+
+
+
+## 🚀 Deploy locally with Docker Compose
+
+```bash
+docker-compose up --build

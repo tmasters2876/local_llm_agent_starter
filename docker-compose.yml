@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    volumes:
+      - ollama_data:/root/.ollama  # persistent models
+    ports:
+      - "11434:11434"  # Ollama API port
+
+  orchestrator:
+    build: .
+    container_name: orchestrator
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_URL=http://ollama:11434  # internal docker hostname!
+    ports:
+      - "8000:8000"  # FastAPI port
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+volumes:
+  ollama_data:
