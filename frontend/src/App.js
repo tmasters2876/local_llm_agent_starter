@@ -41,6 +41,8 @@ function App() {
         >
           <option value="mistral">Mistral</option>
           <option value="llama3">Llama 3</option>
+          <option value="deepseek-coder">DeepSeek Coder</option>
+          <option value="llama4">Llama 4</option>
           {/* Add more options as needed */}
         </select>
 

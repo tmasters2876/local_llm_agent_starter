@@ -33,3 +33,7 @@ npm start
 
 # One command to build and run:
 docker-compose up --build
+
+
+chmod +x pull_models.sh
+./pull_models.sh
