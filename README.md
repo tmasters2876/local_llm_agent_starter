@@ -19,7 +19,8 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# 2️⃣ Pull an LLM model
+# 2️⃣ Pull an LLM modelbrew link python@3.11 --force
+
 ollama pull mistral
 
 # 3️⃣ Start FastAPI
