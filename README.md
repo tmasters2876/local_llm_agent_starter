@@ -2,7 +2,7 @@
 
 ## ✅ What this is
 
-- Runs open-weight LLMs (Mistral, Llama 3) locally via Ollama.
+- Runs open-weight LLMs (Mistral, Llama 3, Deepseek, Llama 4) locally via Ollama.
 - Provides a FastAPI server with a `/api/ask` endpoint.
 - Uses LangGraph nodes for orchestration logic.
 - React front-end for prompt submission, temperature, tokens, and model selection.
