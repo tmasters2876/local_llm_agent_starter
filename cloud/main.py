@@ -1,10 +1,19 @@
 from fastapi import FastAPI, Request  # ✅ fixed
 from pydantic import BaseModel
 from orchestrator import run_orchestration
-
 from fastapi.middleware.cors import CORSMiddleware  # ✅ already good
 
 app = FastAPI()
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 🔒 Can later restrict to your frontend domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/health")
 def health():
