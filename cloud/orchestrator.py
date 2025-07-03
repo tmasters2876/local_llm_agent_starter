@@ -18,7 +18,13 @@ def query_ollama(prompt, model="mistral", temperature=0.7, num_predict=100):
 
         try:
             result = response.json()
-            return result.get("message", {}).get("content", "[Ollama returned no content]")
+            # ✅ FIXED: Safe access with logging
+            if "message" in result and "content" in result["message"]:
+                return result["message"]["content"]
+            else:
+                print("[query_ollama] Unexpected response format:", result)
+                return "Standard fallback: Response missing expected fields."
+
         except Exception as json_err:
             print("[query_ollama] JSON decode failed. Raw response:")
             print(response.text)
@@ -28,6 +34,7 @@ def query_ollama(prompt, model="mistral", temperature=0.7, num_predict=100):
     except Exception as e:
         print("[query_ollama fallback] HTTP error:", e)
         return "Standard fallback: Unable to process your request at the moment."
+
 
 
 # ✅ Core orchestration logic
