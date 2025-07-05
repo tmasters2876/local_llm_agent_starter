@@ -1,11 +1,11 @@
 import requests
 
 def query_ollama(prompt, model="mistral", temperature=0.7, num_predict=100):
-    url = "http://ollama:11434/api/chat"
+    url = "http://ollama:11434/api/generate"
     headers = {"Content-Type": "application/json"}
     payload = {
         "model": model,
-        "messages": [{"role": "user", "content": prompt}],
+        "prompt": prompt,
         "temperature": temperature,
         "stream": False
     }
@@ -16,12 +16,11 @@ def query_ollama(prompt, model="mistral", temperature=0.7, num_predict=100):
 
         try:
             result = response.json()
-            print("🧪 Raw Ollama response:", result)  # ✅ LOG HERE
-            if "message" in result and "content" in result["message"]:
-                return result["message"]["content"]
+            if "response" in result:
+                return result["response"]
             else:
-                return "Standard fallback: Missing 'message' or 'content' field."
-
+                print("[query_ollama] Unexpected response format:", result)
+                return "Standard fallback: Missing 'response' key."
         except Exception as json_err:
             print("[query_ollama] JSON decode failed. Raw response:")
             print(response.text)
@@ -31,3 +30,4 @@ def query_ollama(prompt, model="mistral", temperature=0.7, num_predict=100):
     except Exception as e:
         print("[query_ollama fallback] HTTP error:", e)
         return "Standard fallback: Unable to process your request at the moment."
+
