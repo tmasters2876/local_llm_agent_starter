@@ -1,48 +1,33 @@
 import requests
-import json
-import logging
 
-def query_ollama(prompt: str, model: str = "llama3", temperature: float = 0.7, num_predict: int = 100) -> str:
+def query_ollama(prompt, model="mistral", temperature=0.7, num_predict=100):
+    url = "http://ollama:11434/api/chat"
+    headers = {"Content-Type": "application/json"}
+    payload = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": temperature,
+        "stream": False
+    }
+
     try:
-        url = "http://ollama:11434/api/generate"
-        headers = {"Content-Type": "application/json"}
-        payload = {
-            "model": model,
-            "prompt": prompt,
-            "stream": False,
-            "options": {
-                "temperature": temperature,
-                "num_predict": num_predict
-            }
-        }
-
         response = requests.post(url, headers=headers, json=payload)
-
-        # ✅ Add raw text fallback print for debugging (optional)
-        logging.info(f"[Ollama Raw Text] {response.text}")
-
-        # ✅ Handle no content
-        if not response.text.strip():
-            logging.warning("Empty response from Ollama.")
-            return "Standard fallback: Ollama returned empty response."
+        response.raise_for_status()
 
         try:
-            # Preferred: parse as single JSON
-            parsed = response.json()
-            return parsed.get("response", "Standard fallback: Missing 'response' key.")
-        except json.JSONDecodeError:
-            # Fallback: try parsing line-by-line
-            for line in response.text.splitlines():
-                try:
-                    data = json.loads(line)
-                    if "response" in data:
-                        return data["response"]
-                except json.JSONDecodeError:
-                    continue
+            result = response.json()
+            print("🧪 Raw Ollama response:", result)  # ✅ LOG HERE
+            if "message" in result and "content" in result["message"]:
+                return result["message"]["content"]
+            else:
+                return "Standard fallback: Missing 'message' or 'content' field."
 
-        logging.warning("Ollama returned unparseable content.")
-        return "Standard fallback: Failed to parse Ollama response."
+        except Exception as json_err:
+            print("[query_ollama] JSON decode failed. Raw response:")
+            print(response.text)
+            print("Error:", json_err)
+            return "Standard fallback: Ollama returned invalid JSON."
 
     except Exception as e:
-        logging.error(f"[query_ollama fallback] Unexpected error: {e}")
-        return "Standard fallback: An unexpected error occurred."
+        print("[query_ollama fallback] HTTP error:", e)
+        return "Standard fallback: Unable to process your request at the moment."
