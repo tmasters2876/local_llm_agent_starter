@@ -12,11 +12,9 @@
 
 # List of models to pull — update as you add new models
 MODELS=(
-  "mistral"
+  
   "llama3"
-  "deepseek-coder"
-  "llama4"
-  "gemma3"
+  
 )
 
 echo "📦 Starting model pulls inside container..."
