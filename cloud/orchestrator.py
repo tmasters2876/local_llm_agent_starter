@@ -10,7 +10,7 @@ def run_orchestration(payload):
         prompt=payload.get("prompt", ""),
         temperature=payload.get("temperature", 0.7),
         num_predict=payload.get("num_predict", 100),
-        model=payload.get("model", "mistral")
+        model=payload.get("model", "llama3")
     )
 
     # Step 1: Intake
