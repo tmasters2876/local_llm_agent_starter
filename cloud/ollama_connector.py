@@ -1,6 +1,6 @@
 import requests
 
-def query_ollama(prompt, model="llama3", temperature=0.7, num_predict=100):
+def query_ollama(prompt, model="gemma:2b", temperature=0.7, num_predict=100):
     url = "http://ollama:11434/api/chat"
     headers = {"Content-Type": "application/json"}
     payload = {
