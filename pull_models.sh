@@ -17,6 +17,7 @@ MODELS=(
   "deepseek-coder"
   "llama4"
   "gemma3"
+  "gpt-oss"
 )
 
 echo "📦 Starting model pulls inside container..."

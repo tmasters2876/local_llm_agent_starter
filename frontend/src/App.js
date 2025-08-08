@@ -44,6 +44,7 @@ function App() {
           <option value="deepseek-coder">DeepSeek Coder</option>
           <option value="gemma3">Gemma3</option>
           <option value="llama4">Llama 4</option>
+          <option value="gpt-oss">gpt-oss</option>
           {/* Add more options as needed */}
         </select>
 
